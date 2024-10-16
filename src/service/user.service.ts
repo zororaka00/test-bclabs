@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from "@nestjs/config";
+import { ConfigService } from '@nestjs/config';
 
 import { PrismaService } from 'src/helper/prisma.service';
 
@@ -20,24 +20,28 @@ export class UserService {
       data: null,
     };
     try {
-        const getTokens = await this.prismaService.token.findMany();
-        const allData = await Promise.all(getTokens.map(async data => {
-            const dataPrices = await this.prismaService.getHourlyTokenPrices(data.id);
-            return {
-                token_name: data.token_name,
-                token_symbol: data.token_symbol,
-                decimals: data.decimals,
-                token_address: data.token_address,
-                prices: dataPrices
-            };
-        }));
-        result = {
-            message: 'Success',
-            data: allData
-        };
-        return result;
+      const getTokens = await this.prismaService.token.findMany();
+      const allData = await Promise.all(
+        getTokens.map(async (data) => {
+          const dataPrices = await this.prismaService.getHourlyTokenPrices(
+            data.id,
+          );
+          return {
+            token_name: data.token_name,
+            token_symbol: data.token_symbol,
+            decimals: data.decimals,
+            token_address: data.token_address,
+            prices: dataPrices,
+          };
+        }),
+      );
+      result = {
+        message: 'Success',
+        data: allData,
+      };
+      return result;
     } catch (error) {
-        return result;
+      return result;
     }
   }
 
@@ -100,10 +104,16 @@ export class UserService {
             },
             take: 1,
           },
-        }
+        },
       });
-      const ethPrice = Number((await getTokens.find(data => data.token_symbol === 'ETH')).tokenPriceLogs[0].price);
-      const btcPrice = Number((await getTokens.find(data => data.token_symbol === 'BTC')).tokenPriceLogs[0].price);
+      const ethPrice = Number(
+        (await getTokens.find((data) => data.token_symbol === 'ETH'))
+          .tokenPriceLogs[0].price,
+      );
+      const btcPrice = Number(
+        (await getTokens.find((data) => data.token_symbol === 'BTC'))
+          .tokenPriceLogs[0].price,
+      );
       if (ethPrice > 0 && btcPrice > 0) {
         const btcAmount = (eth_amount * ethPrice) / btcPrice;
         const fee = eth_amount * this.feePercentage;
@@ -114,15 +124,15 @@ export class UserService {
             total_fee: {
               eth: fee,
               dollar: fee * Number(ethPrice),
-            }
-          }
+            },
+          },
         };
         return result;
       } else {
         return result;
       }
     } catch (error) {
-      console.log({error})
+      console.log({ error });
       return result;
     }
   }

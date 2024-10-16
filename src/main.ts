@@ -1,14 +1,26 @@
 import { NestFactory } from '@nestjs/core';
-import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, ValidationPipe, UnauthorizedException } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger';
-import { ConfigService } from "@nestjs/config";
-import Moralis from "moralis";
-
+import {
+  ArgumentsHost,
+  BadRequestException,
+  Catch,
+  ExceptionFilter,
+  ValidationPipe,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {
+  SwaggerModule,
+  DocumentBuilder,
+  SwaggerDocumentOptions,
+} from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import Moralis from 'moralis';
 
 import { AppModule } from './app.module';
 
 @Catch(BadRequestException)
-export class ValidationExceptionFilter implements ExceptionFilter<BadRequestException> {
+export class ValidationExceptionFilter
+  implements ExceptionFilter<BadRequestException>
+{
   public catch(exception: UnauthorizedException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest() as any;
@@ -23,7 +35,8 @@ export class ValidationExceptionFilter implements ExceptionFilter<BadRequestExce
         statusCode: status,
         message: customMessage ?? 'Request is fail',
         data: null,
-      }).end();
+      })
+      .end();
   }
 }
 
@@ -41,8 +54,9 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
       .json({
         statusCode: status,
         message: customMessage ?? 'Request is fail',
-        data: null
-      }).end();
+        data: null,
+      })
+      .end();
   }
 }
 
@@ -59,7 +73,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const options: SwaggerDocumentOptions = {
-    deepScanRoutes: true
+    deepScanRoutes: true,
   };
   const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('swagger', app, document, {

@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
 import { UserService } from 'src/service/user.service';
@@ -13,7 +8,7 @@ import { ISwapRate, RPrices, RSwapRate } from './dto';
 @Controller()
 export class UserGetController {
   constructor(private readonly userService: UserService) {}
-  
+
   @Get('prices')
   @ApiResponse(RPrices)
   async get_prices(@Res() res) {

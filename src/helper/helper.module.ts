@@ -8,7 +8,6 @@ import { Web3Class } from './classes/web3';
 @Module({
   controllers: [],
   providers: [PrismaService, HelperService, EmailClass, Web3Class],
-  exports: [PrismaService, HelperService]
+  exports: [PrismaService, HelperService],
 })
-
-export class HelperModule { }
+export class HelperModule {}
