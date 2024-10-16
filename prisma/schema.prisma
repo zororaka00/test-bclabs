@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Token {
+  id              Int      @id @default(autoincrement())
+  token_address   String
+  token_name      String
+  token_symbol    String
+  decimals        Int
+  chain           String
+  tokenPriceLogs  TokenPriceLogs[]
+  alerts          Alert[]
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+}
+
+model TokenPriceLogs {
+  id            BigInt      @id @default(autoincrement())
+  token_id      Int      
+  price         Decimal  @default(0)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  token         Token @relation(fields: [token_id], references: [id])
+}
+
+model Alert {
+  id           Int      @id @default(autoincrement())
+  token_id     Int      
+  target_price Decimal
+  email        String
+  triggered    Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  token        Token @relation(fields: [token_id], references: [id])
+}
