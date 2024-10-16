@@ -19,8 +19,7 @@ export class CronJobService {
     // Recommendation:
     // - if want to use the free version and the token is limited to < 10. I recommend using https://www.geckoterminal.com/dex-api first to get the price (if onchain data)
     // - or use Binance Public API for get the price data (if exchange data). Example: https://www.binance.com/api/v3/ticker/price?symbol=ETHUSDT
-    @Cron('*/5 * * * * * ') // 5 seconds
-    // @Cron(CronExpression.EVERY_5_MINUTES) // 5 minutes
+    @Cron(CronExpression.EVERY_5_MINUTES) // 5 minutes
     async handlePrice() {
         if (!this.stateLoopPrice) {
             this.stateLoopPrice = true;
@@ -85,7 +84,6 @@ export class CronJobService {
     }
 
     @Cron('*/5 * * * * * ') // 5 seconds
-    // @Cron(CronExpression.EVERY_5_MINUTES) // 5 minutes
     async handleTargetPrice() {
         if (!this.stateLoopTargetPrice) {
             this.stateLoopTargetPrice = true;
